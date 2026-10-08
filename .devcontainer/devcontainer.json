@@ -1,0 +1,84 @@
+{
+	"build": {
+		"dockerfile": "./Dockerfile",
+		"target": "dev"
+	},
+	"containerEnv": {
+		// Set the default editor to VSCode
+		"EDITOR": "code",
+		// Local uv cache in workspace (avoids cross-filesystem hardlink issues)
+		"UV_CACHE_DIR": "/workspaces/.uv-cache"
+	},
+	"customizations": {
+		"vscode": {
+			// Settings for VSCode
+			"settings": {
+				// Format source files on save
+				"editor.formatOnSave": true,
+				// Disable VSCode telemetry
+				"telemetry.telemetryLevel": "off",
+				// Enable file nesting
+				"explorer.fileNesting.enabled": true,
+				// Wrap long lines to fit into the viewport
+				"editor.wordWrap": "on",
+				// JSON Language Settings
+				"[json][jsonc]": {
+					// Format JSON using the default VSCode formatter
+					"editor.defaultFormatter": "vscode.json-language-features"
+				},
+				"[python]": {
+					// Format Python files using the 'Black' extension formatter
+					"editor.defaultFormatter": "ms-python.black-formatter"
+				},
+				// Enable inlay hints for Python variables
+				"python.analysis.inlayHints.variableTypes": true,
+				// Enable standard type checking for Python
+				"python.analysis.typeCheckingMode": "standard",
+				// Enable pytest testing framework
+				"python.testing.pytestEnabled": true,
+				// Set the test directory for pytest
+				"python.testing.pytestArgs": [
+					"tests"
+				],
+				// Pytest supports unittest test cases, so unittest is disabled
+				// Otherwise results in duplicate test discovery with pytest
+				"python.testing.unittestEnabled": false,
+				// Scan all workspace files for diagnostics, not just open files
+				"python.analysis.diagnosticMode": "workspace",
+				"files.associations": {
+					"*.jinja": "jinja",
+					"*.jinja2": "jinja",
+					"*.j2": "jinja"
+				}
+			},
+			// Extensions to install
+			"extensions": [
+				// VSCode .env syntax highlighting
+				"mikestead.dotenv",
+				// Python language support 
+				"ms-python.python",
+				// TOML language support
+				"tamasfe.even-better-toml",
+				// Makefile language support
+				"ms-vscode.makefile-tools",
+				// Black Formatter to lint Python code
+				"ms-python.black-formatter",
+				// Highlights indentation levels with different colors
+				"oderwat.indent-rainbow",
+				// Enable voice capabilities in VSCode
+				"ms-vscode.vscode-speech"
+			]
+		}
+	},
+	"features": {
+		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+			// Use Docker CE build
+			"moby": false
+		},
+		"ghcr.io/devcontainers/features/common-utils:2": {
+			"configureZshAsDefaultShell": true,
+			"username": "devcontainer"
+		},
+		"ghcr.io/devcontainers/features/git-lfs:1": {}
+	}
+}
