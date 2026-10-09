@@ -1,23 +1,19 @@
 [project]
-name = "cow_calculator_lib"
+name = "testing-assignment-3"
 version = "0.1.0"
-description = "A basic calculator library with cows"
+description = "Selenium web tests for 31282 Systems Testing and Quality Management Assignment 3"
 readme = "README.md"
-authors = [
-    { name = "Person 1", email = "person1@email.com" },
-    { name = "Person 2", email = "person2@email.com" },
-    { name = "Person 3", email = "person3@email.com" },
-]
 requires-python = ">=3.12"
-dependencies = ["cowsay"]
-
-[build-system]
-requires = ["uv_build>=0.10.7,<0.11.0"]
-build-backend = "uv_build"
 
 [dependency-groups]
-dev = [{ include-group = "test" }]
+dev = [
+    { include-group = "test" },
+    "selenium>=4.51.0",
+]
 test = [
     "pytest>=9.0.2",
     "pytest-benchmark[histogram]>=5.2.3",
 ]
+
+[tool.ruff]
+line-length = 120

@@ -1,0 +1,18 @@
+"""
+Author: Karim Elkholy
+
+Page Object classes for the LambdaTest E-Commerce Playground.
+"""
+from pages.base_page import BasePage
+from pages.login_page import LoginPage
+from pages.register_page import RegisterPage
+from pages.account_page import AccountPage
+from pages.search_page import SearchPage
+
+__all__ = [
+    "BasePage",
+    "LoginPage",
+    "RegisterPage",
+    "AccountPage",
+    "SearchPage",
+]
