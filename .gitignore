@@ -8,3 +8,11 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Test run artifacts (screenshots etc.)
+artifacts/
+
+# ZCode assistant workspace folder
+.zcode/
+
+screenshots/
