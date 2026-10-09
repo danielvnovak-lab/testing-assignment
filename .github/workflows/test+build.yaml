@@ -1,4 +1,4 @@
-name: test-and-build
+name: test
 on:
   push:
     branches:
@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         runner: [ubuntu-latest, ubuntu-24.04-arm]
-      
+
     runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v5
@@ -26,27 +26,9 @@ jobs:
       - name: sync
         run: uv sync
 
+      # GitHub runners ship with Chrome preinstalled; the web tests drive the
+      # live playground site, so they must run headless.
       - name: test
         run: uv run pytest
-  build:
-
-    strategy:
-      matrix: 
-        runner: [ubuntu-latest, ubuntu-24.04-arm]
-
-    runs-on: ${{ matrix.runner }}
-    needs: [test]
-
-    steps:
-      - uses: actions/checkout@v5
-    
-      - name: Install uv
-        uses: astral-sh/setup-uv@v7
-        with:
-          enable-cache: true
-
-      - name: sync
-        run: uv sync
-
-      - name: build
-        run: uv build
+        env:
+          HEADLESS: "1"

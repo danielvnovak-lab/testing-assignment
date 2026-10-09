@@ -36,10 +36,12 @@ jobs:
 
       - name: Run tests + coverage
         run: >
-          uv run pytest --cov=src/ 
-          --cov-report=xml:coverage.xml 
-          --cov-report=html:htmlcov 
+          uv run pytest --cov=pages
+          --cov-report=xml:coverage.xml
+          --cov-report=html:htmlcov
           --cov-report=markdown
+        env:
+          HEADLESS: "1"
 
       - name: Generate badge
         run: |
