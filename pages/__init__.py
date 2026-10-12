@@ -3,10 +3,12 @@ Author: Karim Elkholy
 
 Page Object classes for the LambdaTest E-Commerce Playground.
 """
-from pages.base_page import BasePage
-from pages.login_page import LoginPage
-from pages.register_page import RegisterPage
 from pages.account_page import AccountPage
+from pages.base_page import BasePage
+from pages.cart_page import CartPage
+from pages.login_page import LoginPage
+from pages.product_page import ProductPage
+from pages.register_page import RegisterPage
 from pages.search_page import SearchPage
 
 __all__ = [
@@ -14,5 +16,7 @@ __all__ = [
     "LoginPage",
     "RegisterPage",
     "AccountPage",
+    "CartPage",
+    "ProductPage",
     "SearchPage",
 ]
