@@ -6,6 +6,7 @@ Page Object classes for the LambdaTest E-Commerce Playground.
 from pages.account_page import AccountPage
 from pages.base_page import BasePage
 from pages.cart_page import CartPage
+from pages.category_page import CategoryPage
 from pages.contact_page import ContactPage
 from pages.login_page import LoginPage
 from pages.product_page import ProductPage
@@ -21,4 +22,5 @@ __all__ = [
     "ProductPage",
     "SearchPage",
     "ContactPage",
+    "CategoryPage",
 ]
