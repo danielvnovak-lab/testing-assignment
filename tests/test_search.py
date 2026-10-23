@@ -52,7 +52,7 @@ def test_scenario_3_search_nonexistent_product(
     search = SearchPage(driver, base_url).open().search(NONEXISTENT_KEYWORD)
     snap("01_no_results")
 
-    assert search.has_no_results_message(), (
-        "expected 'There is no product that matches the search criteria.'"
+    assert search.has_no_results(), (
+        "a non-existent product must not render any result cards"
     )
     assert search.result_titles() == [], "a non-existent product must not return results"

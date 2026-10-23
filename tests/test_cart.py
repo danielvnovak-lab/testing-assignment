@@ -6,7 +6,8 @@ T004 - Shopping Cart (F4).
 Function IDs/Names: F4 Shopping Cart
 Tester: Alexander Paceskoski
 
-Scenario 1: adding a product updates the toast, header badge and totals.
+Scenario 1: adding a product updates the confirmation banner, header cart
+            summary and totals.
 Scenario 2: changing the quantity recalculates the totals.
 Scenario 3: removing the item empties the cart.
 

@@ -1,7 +1,7 @@
 """
 Author: Karim Elkholy
 
-Login page: https://ecommerce-playground.lambdatest.io/index.php?route=account/login
+Login page: https://opencart.abstracta.us/index.php?route=account/login
 """
 
 from typing import Self
@@ -16,9 +16,8 @@ class LoginPage(BasePage):
     PASSWORD: Locator = (By.ID, "input-password")
     SUBMIT: Locator = (By.CSS_SELECTOR, "input[type=submit][value=Login]")
     FORGOTTEN_LINK: Locator = (By.CSS_SELECTOR, 'a[href*="account/forgotten"]')
-    # The page carries a decorative .alert-info banner; the login warning is
-    # the .alert-danger / .alert-warning element.
-    ALERT: Locator = (By.CSS_SELECTOR, ".alert-danger, .alert-warning")
+    # The failed-login warning renders as an .alert-danger banner.
+    ALERT: Locator = (By.CSS_SELECTOR, ".alert-danger")
 
     def open(self, route: str = "account/login") -> Self:
         super().open(route)

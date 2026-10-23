@@ -1,9 +1,10 @@
 """
 Author: Karim Elkholy
 
-Base page: shared waits/helpers plus the site header (My account menu, cart badge).
+Base page: shared waits/helpers plus the site header (My account menu, cart summary).
 """
 
+import re
 from typing import Self
 
 from selenium.common.exceptions import (
@@ -11,7 +12,6 @@ from selenium.common.exceptions import (
     StaleElementReferenceException,
     TimeoutException,
 )
-from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
@@ -25,12 +25,14 @@ Locator = tuple[str, str]
 
 
 class BasePage:
-    MY_ACCOUNT_TOGGLE: Locator = (By.CSS_SELECTOR, 'a.nav-link.dropdown-toggle[href*="account/account"]')
-    MENU_LOGIN: Locator = (By.CSS_SELECTOR, "a.dropdown-item[href*='account/login']")
-    MENU_REGISTER: Locator = (By.CSS_SELECTOR, "a.dropdown-item[href*='account/register']")
-    MENU_LOGOUT: Locator = (By.CSS_SELECTOR, "a.dropdown-item[href*='account/logout']")
-    CART_BADGE: Locator = (By.CSS_SELECTOR, ".cart-item-total")
-    CART_SUMMARY: Locator = (By.CSS_SELECTOR, ".cart-items")
+    # Stock OpenCart header (Bootstrap 3): the My Account dropdown toggles on
+    # click and its parent <li> carries class 'open' while expanded.
+    MY_ACCOUNT_TOGGLE: Locator = (By.CSS_SELECTOR, "#top-links a[title='My Account']")
+    MENU_LOGIN: Locator = (By.CSS_SELECTOR, "#top-links .dropdown-menu a[href*='account/login']")
+    MENU_REGISTER: Locator = (By.CSS_SELECTOR, "#top-links .dropdown-menu a[href*='account/register']")
+    MENU_LOGOUT: Locator = (By.CSS_SELECTOR, "#top-links .dropdown-menu a[href*='account/logout']")
+    # Header cart summary, e.g. '1 item(s) - $123.20'.
+    CART_SUMMARY: Locator = (By.ID, "cart-total")
 
     def __init__(self, driver: WebDriver, base_url: str) -> None:
         self.driver: WebDriver = driver
@@ -74,26 +76,39 @@ class BasePage:
 
     def open_my_account_menu(self, item: Locator) -> Self:
         """
-        Hover-open the My account dropdown and wait for `item` to be clickable.
+        Click-open the My account dropdown and wait for `item` to be clickable.
 
-        The theme's dropdown is hover-driven (class dropdown-hoverable): a
-        click closes it, hovering opens it. `item` is the specific menu entry
-        we intend to click next (its href makes it unique in the DOM).
+        The stock Bootstrap 3 dropdown toggles on click (the toggle's href is
+        suppressed by Bootstrap) and the parent <li> carries class 'open' while
+        expanded. `item` is the specific menu entry we intend to click next.
         """
-        # Hovering mid-page-load lands nowhere; wait for the page to settle.
+        # Clicking mid-page-load lands nowhere; wait for the page to settle.
         self.wait.until(lambda d: d.execute_script("return document.readyState") == "complete")
         toggle: WebElement = self.wait.until(ec.element_to_be_clickable(self.MY_ACCOUNT_TOGGLE))
         item_wait = WebDriverWait(self.driver, 4)
         last_error: TimeoutException | None = None
         for _ in range(3):
-            ActionChains(self.driver).move_to_element(toggle).perform()
+            # The click toggles, so only click while the menu is closed.
+            if not self._menu_is_open(toggle):
+                toggle.click()
             try:
                 item_wait.until(ec.element_to_be_clickable(item))
                 return self
             except TimeoutException as exc:
                 last_error = exc
+                # Drop any half-open state so the next attempt re-opens cleanly.
+                self.driver.execute_script(
+                    "arguments[0].closest('li').classList.remove('open')", toggle
+                )
         assert last_error is not None
         raise last_error
+
+    def _menu_is_open(self, toggle: WebElement) -> bool:
+        return bool(
+            self.driver.execute_script(
+                "return arguments[0].closest('li').classList.contains('open')", toggle
+            )
+        )
 
     def go_to_login(self) -> Self:
         """
@@ -122,12 +137,6 @@ class BasePage:
 
     # --- header cart -------------------------------------------------------
 
-    def cart_badge_count(self) -> str:
-        for badge in self.find_all(self.CART_BADGE):
-            if badge.is_displayed():
-                return badge.text.strip()
-        return ""
-
     def cart_summary(self) -> str:
         """
         Header cart text, e.g. '1 item(s) - $123.20'.
@@ -136,3 +145,10 @@ class BasePage:
             if summary.is_displayed():
                 return summary.text.strip()
         return ""
+
+    def cart_badge_count(self) -> str:
+        """
+        Item count in the header cart summary ('1 item(s) - $123.20' -> '1').
+        """
+        match = re.search(r"\d+", self.cart_summary())
+        return match.group(0) if match else ""

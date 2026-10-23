@@ -5,7 +5,7 @@ Tester: Alexander Paceskoski
 T005 - Contact Us (F5) - all 3 scenarios.
 
 Function IDs/Names: F5 Contact Us
-(https://ecommerce-playground.lambdatest.io/index.php?route=information/contact)
+(https://opencart.abstracta.us/index.php?route=information/contact)
 
 Scenario 1: submitting the contact form with valid data succeeds.
 Scenario 2: submitting with an invalid email address shows a validation error.

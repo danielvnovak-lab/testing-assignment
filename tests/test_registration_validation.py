@@ -34,7 +34,7 @@ def test_scenario_1_successful_registration(
     register.register("John", "Doe", email, "+61400000000", TEST_PASSWORD)
     snap("01_registration_success")
 
-    assert register.is_successful(), "expected 'Your Account Has Been Created!' message"
+    assert register.is_successful(), "expected the account-created success message"
 
 
 def test_scenario_2_email_already_registered_rejected(

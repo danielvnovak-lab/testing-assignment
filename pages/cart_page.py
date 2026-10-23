@@ -1,7 +1,7 @@
 """
 Author: Alexander Paceskoski
 
-Shopping cart page: https://ecommerce-playground.lambdatest.io/index.php?route=checkout/cart
+Shopping cart page: https://opencart.abstracta.us/index.php?route=checkout/cart
 """
 
 from typing import Self
@@ -36,15 +36,30 @@ class CartPage(BasePage):
         field.send_keys(str(quantity))
         return self
 
+    def _click_visible_button(self, locator: Locator) -> None:
+        """
+        Click the first displayed button matching `locator`.
+
+        The page can carry a second, hidden copy of these buttons (matching by
+        title=), so element_to_be_clickable on the raw locator can pick a
+        hidden element and wait forever.
+        """
+        self.wait.until(lambda d: any(b.is_displayed() for b in d.find_elements(*locator)))
+        for button in self.driver.find_elements(*locator):
+            if button.is_displayed():
+                button.click()
+                return
+        raise AssertionError(f"no visible button found for {locator}")
+
     def update(self) -> Self:
-        self.click(self.UPDATE_BUTTON)
+        self._click_visible_button(self.UPDATE_BUTTON)
         # The cart table is re-rendered (reload or AJAX); wait for the
         # quantity field to be back and usable.
         self.wait.until(ec.element_to_be_clickable(self.QUANTITY_INPUT))
         return self
 
     def remove_item(self) -> Self:
-        self.click(self.REMOVE_BUTTON)
+        self._click_visible_button(self.REMOVE_BUTTON)
         self.wait.until(lambda d: self.contains_text(EMPTY_MESSAGE))
         return self
 

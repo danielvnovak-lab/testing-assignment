@@ -1,7 +1,7 @@
 """
 Author: Karim Elkholy
 
-Registration page: https://ecommerce-playground.lambdatest.io/index.php?route=account/register
+Registration page: https://opencart.abstracta.us/index.php?route=account/register
 """
 from typing import Self
 
@@ -10,7 +10,10 @@ from selenium.webdriver.remote.webelement import WebElement
 
 from pages.base_page import BasePage, Locator
 
-SUCCESS_MESSAGE: str = "Your Account Has Been Created!"
+# This demo's success page reads 'Congratulations! Your new account has been
+# successfully created!' (older OpenCart builds said 'Your Account Has Been
+# Created!').
+SUCCESS_MESSAGE: str = "Your new account has been successfully created!"
 
 
 class RegisterPage(BasePage):
@@ -20,12 +23,12 @@ class RegisterPage(BasePage):
     TELEPHONE: Locator = (By.ID, "input-telephone")
     PASSWORD: Locator = (By.ID, "input-password")
     PASSWORD_CONFIRM: Locator = (By.ID, "input-confirm")
-    # The real checkbox input is visually hidden (Bootstrap custom control);
-    # users click its label.
-    AGREE_LABEL: Locator = (By.CSS_SELECTOR, 'label[for="input-agree"]')
+    # The agree checkbox is a plain input in the stock theme (no id, no
+    # matching label), so click the checkbox itself.
+    AGREE_CHECKBOX: Locator = (By.CSS_SELECTOR, 'input[name="agree"]')
     CONTINUE: Locator = (By.CSS_SELECTOR, "input[type=submit][value=Continue]")
     # The rejected-registration warning banner (e.g. duplicate email).
-    ALERT: Locator = (By.CSS_SELECTOR, ".alert-danger, .alert-warning")
+    ALERT: Locator = (By.CSS_SELECTOR, ".alert-danger")
     FIELD_ERRORS = (By.CSS_SELECTOR, ".text-danger")
 
     def open(self, route: str = "account/register") -> Self:
@@ -63,7 +66,7 @@ class RegisterPage(BasePage):
         """
         Agree to the privacy policy and click Continue (no success waiting).
         """
-        self.click(self.AGREE_LABEL)
+        self.click(self.AGREE_CHECKBOX)
         self.click(self.CONTINUE)
         return self
 

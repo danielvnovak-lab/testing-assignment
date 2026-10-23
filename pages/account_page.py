@@ -1,7 +1,7 @@
 """
 Author: Karim Elkholy
 
-My Account dashboard: https://ecommerce-playground.lambdatest.io/index.php?route=account/account
+My Account dashboard: https://opencart.abstracta.us/index.php?route=account/account
 """
 
 from typing import Self

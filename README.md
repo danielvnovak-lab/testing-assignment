@@ -6,9 +6,14 @@ This repository contains the work for Testing Assignment 3.
 
 ## Testing website
 
-Use the following website for testing:
+The assignment originally used the LambdaTest E-Commerce Playground, which the
+instructor has taken offline. Per the course announcement, testing now uses:
 
-[LambdaTest E-Commerce Playground](https://ecommerce-playground.lambdatest.io/index.php?route=common/home)
+[OpenCart demo](https://opencart.abstracta.us/index.php?route=common/home)
+
+It runs the same OpenCart software and demo catalogue (same routes, field IDs
+and messages) as the old playground, so the existing scenarios carry over.
+The `BASE_URL` environment variable still overrides the target.
 
 ## Running the tests
 
@@ -20,9 +25,9 @@ uv run pytest -v     # run all tests (headed: browser window is visible)
 HEADLESS=1 uv run pytest -v     # run all tests (headless)
 ```
 
-> Note: the shop rate-limits failed logins (~10 per hour per IP). If tests
-> start failing with 'account has exceeded allowed number of login attempts',
-> wait up to an hour or run a single file instead.
+> Note: this is a shared public demo. OpenCart can answer repeated failed
+> logins with 'account has exceeded allowed number of login attempts'; the
+> suite already accepts that as a valid rejection.
 
 ## Assignment instructions
 

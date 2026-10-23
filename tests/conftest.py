@@ -5,7 +5,7 @@ Shared fixtures for the Selenium web test suite (driver, screenshots, test accou
 
 Environment variables:
     BASE_URL  -- base of the site under test
-                 (default: https://ecommerce-playground.lambdatest.io/index.php)
+                 (default: https://opencart.abstracta.us/index.php)
     HEADLESS  -- "1" to run Chrome headless, anything else shows the browser
                  (default: "0")
 """
@@ -29,7 +29,7 @@ from pages.register_page import RegisterPage  # noqa: E402
 
 REPO_ROOT: Path = Path(__file__).resolve().parents[1]
 BASE_URL: str = os.environ.get(
-    "BASE_URL", "https://ecommerce-playground.lambdatest.io/index.php"
+    "BASE_URL", "https://opencart.abstracta.us/index.php"
 )
 SCREENSHOT_DIR: Path = REPO_ROOT / "artifacts" / "screenshots"
 

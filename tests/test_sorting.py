@@ -5,8 +5,8 @@ Tester: Alexander Paceskoski
 T006 - Product Sorting (F6) - all 3 scenarios.
 
 Function IDs/Names: F6 Product Sorting
-(Sort By dropdown on the Cameras category page:
- https://ecommerce-playground.lambdatest.io/index.php?route=product/category&path=33)
+(Sort By dropdown on the Desktops category page:
+ https://opencart.abstracta.us/index.php?route=product/category&path=20)
 
 Scenario 1: sorting in alphabetical order (Name A - Z).
 Scenario 2: sorting in ascending price order (Price Low > High).

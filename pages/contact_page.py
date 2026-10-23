@@ -1,7 +1,7 @@
 """
 Author: Alexander Paceskoski
 
-Contact Us page: https://ecommerce-playground.lambdatest.io/index.php?route=information/contact
+Contact Us page: https://opencart.abstracta.us/index.php?route=information/contact
 """
 
 from typing import Self
@@ -16,7 +16,7 @@ class ContactPage(BasePage):
     EMAIL = (By.ID, "input-email")
     ENQUIRY = (By.ID, "input-enquiry")
     SUBMIT = (By.CSS_SELECTOR, "input[type=submit][value=Submit]")
-    FEEDBACK = (By.CSS_SELECTOR, ".invalid-feedback")
+    FEEDBACK = (By.CSS_SELECTOR, ".text-danger")
 
     def open(self, route: str = "information/contact") -> Self:
         super().open(route)
