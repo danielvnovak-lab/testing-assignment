@@ -19,9 +19,22 @@ from selenium.webdriver.remote.webdriver import WebDriver
 
 from pages.category_page import CategoryPage
 
+TEST_ID = "T006"
+
 ALPHABETICAL = "Name (A - Z)"
 PRICE_ASC = "Price (Low > High)"
 PRICE_DESC = "Price (High > Low)"
+
+
+def _snap_full_grid(page: CategoryPage, snap: Callable[[str], Path], name: str) -> None:
+    """
+    Grow the (headless) window to the page's full height before snapping, so
+    the evidence shot shows the whole product list - not just its first row -
+    and the sorted order of every product is visible at once.
+    """
+    height = page.driver.execute_script("return document.body.scrollHeight")
+    page.driver.set_window_size(1920, height + 50)
+    snap(name)
 
 
 def test_scenario_1_sort_alphabetical_order(
@@ -30,7 +43,7 @@ def test_scenario_1_sort_alphabetical_order(
     page = CategoryPage(driver, base_url).open()
     page.sort_by(ALPHABETICAL)
     titles: list[str] = page.titles()
-    snap("01_sorted_alphabetically")
+    _snap_full_grid(page, snap, "t006_scenario_1")
 
     assert len(titles) >= 5, f"expected a full product list, got {len(titles)}"
     assert titles == sorted(titles, key=str.lower), (
@@ -44,7 +57,7 @@ def test_scenario_2_sort_price_ascending(
     page = CategoryPage(driver, base_url).open()
     page.sort_by(PRICE_ASC)
     prices: list[float] = page.prices()
-    snap("01_sorted_price_ascending")
+    _snap_full_grid(page, snap, "t006_scenario_2")
 
     assert len(prices) >= 5, f"expected a full product list, got {len(prices)}"
     assert prices == sorted(prices), f"prices should be ascending, got: {prices}"
@@ -56,7 +69,7 @@ def test_scenario_3_sort_price_descending(
     page = CategoryPage(driver, base_url).open()
     page.sort_by(PRICE_DESC)
     prices: list[float] = page.prices()
-    snap("01_sorted_price_descending")
+    _snap_full_grid(page, snap, "t006_scenario_3")
 
     assert len(prices) >= 5, f"expected a full product list, got {len(prices)}"
     assert prices == sorted(prices, reverse=True), f"prices should be descending, got: {prices}"

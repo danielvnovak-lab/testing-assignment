@@ -18,6 +18,8 @@ from selenium.webdriver.remote.webdriver import WebDriver
 
 from pages.contact_page import ContactPage
 
+TEST_ID = "T005"
+
 ENQUIRY_TEXT = "Hello, I would like to ask about product availability."
 
 
@@ -28,7 +30,7 @@ def test_scenario_1_valid_enquiry_is_accepted(
     contact.fill(name="John Doe", email="john.doe@example.com", enquiry=ENQUIRY_TEXT)
     contact.submit()
     contact.wait_for_success()
-    snap("01_enquiry_sent")
+    snap("t005_scenario_1")
 
     assert "information/contact/success" in driver.current_url, (
         "valid enquiry should land on the contact success page"
@@ -42,7 +44,7 @@ def test_scenario_2_invalid_email_shows_error(
     contact.fill(name="John Doe", email="not-an-email", enquiry=ENQUIRY_TEXT)
     contact.submit()
     feedback: list[str] = contact.wait_for_feedback()
-    snap("01_invalid_email_error")
+    snap("t005_scenario_2")
 
     assert "E-Mail Address does not appear to be valid!" in feedback, (
         f"expected invalid-email error, got: {feedback!r}"
@@ -57,7 +59,7 @@ def test_scenario_3_empty_enquiry_shows_error(
     contact.fill(name="John Doe", email="john.doe@example.com")  # enquiry left empty
     contact.submit()
     feedback: list[str] = contact.wait_for_feedback()
-    snap("01_empty_enquiry_error")
+    snap("t005_scenario_3")
 
     assert "Enquiry must be between 10 and 3000 characters!" in feedback, (
         f"expected empty-enquiry error, got: {feedback!r}"

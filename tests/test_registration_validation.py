@@ -21,6 +21,7 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from pages.base_page import BasePage
 from pages.register_page import RegisterPage
 
+TEST_ID = "T002"
 TEST_PASSWORD = "S3cure!Pass2026"
 
 
@@ -32,7 +33,7 @@ def test_scenario_1_successful_registration(
     register = RegisterPage(driver, base_url).open()
     email = f"t002.{uuid.uuid4().hex[:8]}@example.com"
     register.register("John", "Doe", email, "+61400000000", TEST_PASSWORD)
-    snap("01_registration_success")
+    snap("t002_scenario_1")
 
     assert register.is_successful(), "expected the account-created success message"
 
@@ -55,7 +56,7 @@ def test_scenario_2_email_already_registered_rejected(
     second.fill("John", "Doe", email, "+61400000000", TEST_PASSWORD)
     second.submit()
     warning: str = second.warning_text()
-    snap("01_email_already_registered_warning")
+    snap("t002_scenario_2")
 
     assert "already registered" in warning.lower(), (
         f"expected 'already registered' warning, got: {warning!r}"
@@ -79,7 +80,7 @@ def test_scenario_3_passwords_do_not_match_rejected(
     )
     register.submit()
     errors: list[str] = register.wait_for_field_errors()
-    snap("01_password_mismatch_error")
+    snap("t002_scenario_3")
 
     assert "Password confirmation does not match password!" in errors, (
         f"expected mismatch error, got: {errors!r}"
@@ -95,7 +96,7 @@ def test_scenario_4_empty_required_fields_show_errors(
     register = RegisterPage(driver, base_url).open()
     register.submit()  # everything left empty
     errors: list[str] = register.wait_for_field_errors()
-    snap("01_empty_fields_validation_errors")
+    snap("t002_scenario_4")
 
     for expected in (
         "First Name must be between 1 and 32 characters!",

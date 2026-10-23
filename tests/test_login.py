@@ -25,6 +25,8 @@ from pages.account_page import AccountPage
 from pages.base_page import BasePage
 from pages.login_page import LoginPage
 
+TEST_ID = "T001"
+
 
 def test_scenario_1_successful_login(
     driver: WebDriver,
@@ -34,11 +36,15 @@ def test_scenario_1_successful_login(
 ) -> None:
     login = LoginPage(driver, base_url).open()
     login.login(registered_user["email"], registered_user["password"])
-    snap("01_my_account_page")
 
-    assert AccountPage(driver, base_url).is_loaded(), (
+    account = AccountPage(driver, base_url)
+    assert account.is_loaded(), (
         "registered user should land on the My Account page"
     )
+
+    # Screenshot only after the dashboard is confirmed loaded, so the
+    # evidence can never catch the login form mid-navigation.
+    snap("t001_scenario_1")
 
 
 def test_scenario_2_unregistered_email_rejected(
@@ -52,7 +58,7 @@ def test_scenario_2_unregistered_email_rejected(
     login = LoginPage(driver, base_url).open()
     login.login(ghost_email, registered_user["password"])
     warning: str = login.warning_text()  # waits for the warning banner to render
-    snap("01_unregistered_email_warning")
+    snap("t001_scenario_2")
 
     assert login.rejected_warning(), f"expected a rejection warning, got: {warning!r}"
     assert "account/login" in driver.current_url, "should stay on the login page"
@@ -66,7 +72,7 @@ def test_scenario_3_empty_login_fields_rejected(
     login = LoginPage(driver, base_url).open()
     login.login("", "")  # leave both fields empty and submit
     warning: str = login.warning_text()
-    snap("01_empty_fields_warning")
+    snap("t001_scenario_3")
 
     assert login.rejected_warning(), f"expected a rejection warning, got: {warning!r}"
     assert "account/login" in driver.current_url, "should stay on the login page"
@@ -81,7 +87,7 @@ def test_scenario_4_wrong_password_rejected(
     login = LoginPage(driver, base_url).open()
     login.login(registered_user["email"], "WrongPassword!999")
     warning: str = login.warning_text()  # waits for the warning banner to render
-    snap("01_wrong_password_warning")
+    snap("t001_scenario_4")
 
     assert login.rejected_warning(), f"expected a rejection warning, got: {warning!r}"
     assert "account/login" in driver.current_url, "should stay on the login page"
@@ -101,9 +107,9 @@ def test_scenario_5_session_persists_across_navigation(
     # logged-in menu (Logout available, no Login/Register).
     base = BasePage(driver, base_url).open("common/home")
     base.open_my_account_menu(base.MENU_LOGOUT)
-    snap("01_home_still_logged_in")
+    snap("t001_scenario_5_1")
 
     # Return directly to the account route; no credentials required again.
     account = AccountPage(driver, base_url).open()
-    snap("02_my_account_without_relogin")
+    snap("t001_scenario_5_2")
     assert account.is_loaded(), "session should persist across navigation"

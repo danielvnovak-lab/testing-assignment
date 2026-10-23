@@ -17,6 +17,8 @@ from selenium.webdriver.remote.webdriver import WebDriver
 
 from pages.search_page import SearchPage
 
+TEST_ID = "T003"
+
 EXACT_KEYWORD = "iPhone"
 PARTIAL_KEYWORD = "Mac"
 NONEXISTENT_KEYWORD = "hi12345abc"
@@ -26,7 +28,7 @@ def test_scenario_1_search_exact_product_name(
     driver: WebDriver, base_url: str, snap: Callable[[str], Path]
 ) -> None:
     search = SearchPage(driver, base_url).open().search(EXACT_KEYWORD)
-    snap("01_results_for_iphone")
+    snap("t003_scenario_1")
 
     titles: list[str] = search.result_titles()
     assert titles, f"expected results for {EXACT_KEYWORD!r}, got none"
@@ -37,7 +39,7 @@ def test_scenario_2_search_partial_keyword(
     driver: WebDriver, base_url: str, snap: Callable[[str], Path]
 ) -> None:
     search = SearchPage(driver, base_url).open().search(PARTIAL_KEYWORD)
-    snap("01_results_for_mac")
+    snap("t003_scenario_2")
 
     titles: list[str] = search.result_titles()
     assert titles, f"expected results for partial keyword {PARTIAL_KEYWORD!r}"
@@ -50,7 +52,7 @@ def test_scenario_3_search_nonexistent_product(
     driver: WebDriver, base_url: str, snap: Callable[[str], Path]
 ) -> None:
     search = SearchPage(driver, base_url).open().search(NONEXISTENT_KEYWORD)
-    snap("01_no_results")
+    snap("t003_scenario_3")
 
     assert search.has_no_results(), (
         "a non-existent product must not render any result cards"

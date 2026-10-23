@@ -95,12 +95,16 @@ def _screenshot_folder(request: pytest.FixtureRequest) -> Path:
 @pytest.fixture
 def snap(driver: WebDriver, request: pytest.FixtureRequest) -> Callable[[str], Path]:
     """
-    snap("name") saves a screenshot of the current page for the report.
+    snap("t001_scenario_1") saves a screenshot of the current page for the
+    report, filed under the test case's TEST_ID folder. Filenames are stable,
+    so re-running the suite overwrites yesterday's evidence in place.
     """
+    test_id: str = getattr(request.module, "TEST_ID", "misc")
 
     def _snap(name: str) -> Path:
-        stamp: str = datetime.now().strftime("%H%M%S")
-        path: Path = _screenshot_folder(request) / f"{stamp}_{name}.png"
+        folder: Path = SCREENSHOT_DIR / test_id
+        folder.mkdir(parents=True, exist_ok=True)
+        path: Path = folder / f"{name}.png"
         driver.save_screenshot(str(path))
         return path
 
